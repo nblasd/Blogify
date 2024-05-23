@@ -14,13 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 
 function NewPost() {
@@ -70,12 +64,10 @@ function NewPost() {
                 </FormItem>
               )}
             />
+            <Button type="submit">Submit</Button>
           </form>
         </Form>
       </CardContent>
-      <CardFooter>
-        <Button type="submit">Submit</Button>
-      </CardFooter>
     </Card>
   );
 }
