@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import React from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,8 +17,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import Loading from "./loading";
 
 function NewPost() {
+  const [loading, setLoading] = React.useState(false);
+  const route = useRouter();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof newPostSchema>>({
     resolver: zodResolver(newPostSchema),
     defaultValues: {
@@ -26,8 +33,35 @@ function NewPost() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof newPostSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof newPostSchema>) {
+    try {
+      setLoading(true);
+      const response = await axios.post("/api/posts", {
+        title: values.title,
+        content: values.content,
+      });
+      toast({
+        title: "Success",
+        description: "Your post has been submitted successfully!!",
+      });
+      route.push(`/blogs/${response.data?.id}`);
+    } catch (error: any) {
+      if (error.response.status == 401) {
+        toast({
+          variant: "destructive",
+          title: "Unauthorized",
+          description: "Please login first!!",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Something went wrong",
+          description: `${error}`,
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -58,13 +92,21 @@ function NewPost() {
                 <FormItem>
                   <FormLabel>Content</FormLabel>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Textarea placeholder="content" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            {!loading ? (
+              <Button type="submit">Submit</Button>
+            ) : (
+              <Button asChild>
+                <div>
+                  <Loading />
+                </div>
+              </Button>
+            )}
           </form>
         </Form>
       </CardContent>

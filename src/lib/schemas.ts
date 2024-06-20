@@ -6,5 +6,5 @@ export const newPostSchema = z.object({
 });
 
 export const commentFormSchema = z.object({
-  comment: z.string(),
+  comment: z.string().min(1),
 });
