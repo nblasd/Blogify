@@ -27,7 +27,7 @@ async function BlogsPage() {
           <Link key={post.id} href={`/blogs/${post.id}`}>
             <Card className="hover:bg-blue-500 hover:text-white duration-500 ease-in-out min-h-[200px] pb-0">
               <CardHeader>
-                <CardTitle className="text-lg truncate">{post.title}</CardTitle>
+                <CardTitle className="text-lg">{post.title}</CardTitle>
               </CardHeader>
               <CardContent className="truncate text-sm">
                 {post.content}
